@@ -1,0 +1,50 @@
+<customUI xmlns="http://schemas.microsoft.com/office/2009/07/customui" onLoad="RibbonOnLoad">
+  <ribbon>
+    <tabs>
+      <tab id="CustomTab" label="ナレーション2">
+        <group id="GroupNote" label="ノート操作">
+          <button id="Btn04" label="ノート → &#xD;&#xA;テキストファイル" size="large" imageMso="ExportTextFile" onAction="ExportNoteToText" />
+          <button id="Btn05" label="ノート ← &#xD;&#xA;テキストファイル" size="large" imageMso="ImportTextFile" onAction="ImportNoteFromText" />
+          <button id="Btn06" label="スライドテキスト→ノート" size="large" imageMso="TextBoxInsert" onAction="AddNoteInSlides" />
+          <button id="Btn07" label="ノート削除" size="large" imageMso="Clear" onAction="RemoveNoteinSlides" />
+          <button id="Btn08" label="テキストファイルフルパスコピー" size="large" imageMso="Copy" onAction="GetTextFullpath" />
+        </group>
+        <group id="GroupAudioGen" label="音声ファイル生成">
+          <button id="Btn00" label="音声ファイル生成" size="large" imageMso="AnimationAudio" onAction="TestProcessSlides" />
+          <editBox id="voicePortBox" label="ポート番号" onChange="OnVoicePortChange" getText="GetVoicePort" />
+          <editBox id="voiceIdBox" label="音声ID" onChange="OnVoiceIdChange" getText="GetVoiceId" />
+          
+        </group>
+        <group id="GroupAudio" label="音声ファイル操作">
+          <button id="Btn01" label="音声ファイル追加" size="large" imageMso="AnimationAudio" onAction="AddAudioToSlides" />
+          <button id="Btn02" label="音声ファイル位置調整" size="large" imageMso="GoLtrDown" onAction="MoveAudioInSlides" />
+          <editBox id="startDelayBox" label="開始遅延" onChange="OnStartDelayChange" getText="GetStartDelay" />
+          <editBox id="endDelayBox" label="終了遅延" onChange="OnEndDelayChange" getText="GetEndDelay" />
+          <editBox id="transitTimeBox" label="自動切換" onChange="OnTransitTimeChange" getText="GetTransitTime" />
+          <dropDown id="audioXPositionDropdown" label="音声位置" onAction="OnAudioXPositionChange" getSelectedItemIndex="GetAudioXPositionIndex">
+            <item id="pos50" label="50" />
+            <item id="pos-50" label="-50" />
+            <item id="pos-100" label="-100" />
+            <item id="pos-150" label="-150" />
+            <item id="pos-200" label="-200" />
+            <item id="pos-250" label="-250" />
+          </dropDown>
+          <checkBox id="useAudioFolderBox" label="audioフォルダを使用" onAction="OnUseAudioFolderChange" getPressed="GetUseAudioFolder"/>
+          <separator id="separator1" />
+          <button id="Btn03" label="音声ファイル削除" size="large" imageMso="Delete" onAction="RemoveAudioFromSlides" />
+        </group>
+        <group id="GroupSetting" label="設定">
+          <checkBox id="doAllSlidesBox" label="全スライド処理" onAction="OnDoAllSlidesChange" getPressed="GetDoAllSlides"/>
+          <checkBox id="processDiffBox" label="差分処理" onAction="OnProcessDiffChange" getPressed="GetProcessDiff"/>
+          <checkBox id="doOverrideBox" label="上書処理" onAction="OnDoOverrideChange" getPressed="GetDoOverride"/>
+          <button id="resetSettingsButton" label="変数初期化" size="large" imageMso="ResetToTemplate" onAction="OnResetSettings" />
+        </group>
+        <group id="GroupAll" label="PPT実行">
+          <button id="Btn09" label="全スライド" size="large" imageMso="AnimationAudio" onAction="TestALL" />
+          <button id="Btn10" label="カレントスライド" size="large" imageMso="GoLtrDown" onAction="TestCurrent" />
+          <button id="Btn11" label="プレビュー" size="large" imageMso="GoLtrDown" onAction="TestPreview" />
+        </group>
+      </tab>
+    </tabs>
+  </ribbon>
+</customUI>
