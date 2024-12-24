@@ -1,4 +1,6 @@
 Attribute VB_Name = "UtilOneDrivePath"
+Option Explicit
+
 ' OnedriveƒtƒHƒ‹ƒ_æ“¾ŠÖ”
 
 ' https://kuroihako.com/vba/onedriveurltolocalpath/
