@@ -5,16 +5,12 @@
         <group id="GroupNote" label="ノート操作">
           <button id="Btn04" label="ノート → &#xD;&#xA;テキストファイル" size="large" imageMso="ExportTextFile" onAction="ExportNoteToText" />
           <button id="Btn05" label="ノート ← &#xD;&#xA;テキストファイル" size="large" imageMso="ImportTextFile" onAction="ImportNoteFromText" />
-          <!--
-          <checkBox id="doAllSlidesBox2" label="全スライド処理" onAction="OnDoAllSlidesChange" getPressed="GetDoAllSlides"/>
-          <checkBox id="doOverrideBox2" label="上書処理" onAction="OnDoOverrideChange" getPressed="GetDoOverride"/>
-          -->
           <button id="Btn06" label="スライドテキスト→ノート" size="large" imageMso="TextBoxInsert" onAction="AddNoteInSlides" />
           <button id="Btn07" label="ノート削除" size="large" imageMso="Clear" onAction="RemoveNoteinSlides" />
           <button id="Btn08" label="テキストファイルフルパスコピー" size="large" imageMso="Copy" onAction="CopyTextFullpath" />
         </group>
         <group id="GroupAudioGen" label="音声ファイル生成">
-          <button id="Btn00" label="音声ファイル生成" size="large" imageMso="AnimationAudio" onAction="TestProcessSlides" />
+          <button id="Btn00" label="音声ファイル生成" size="large" imageMso="AnimationAudio" onAction="ExportNoteToAudios" />
           <editBox id="voicePortBox" label="ポート番号" onChange="OnVoicePortChange" getText="GetVoicePort" />
           <editBox id="voiceIdBox" label="音声ID" onChange="OnVoiceIdChange" getText="GetVoiceId" />
           
@@ -44,22 +40,9 @@
           <button id="resetSettingsButton" label="変数初期化" size="large" imageMso="ResetToTemplate" onAction="OnResetSettings" />
         </group>
         <group id="GroupAll" label="PPT実行">
-          <button id="Btn09" label="全スライド" size="large" imageMso="AnimationAudio" onAction="TestALL" />
-          <button id="Btn10" label="カレントスライド" size="large" imageMso="GoLtrDown" onAction="TestCurrent" />
+          <button id="Btn09" label="全処理" size="large" imageMso="AnimationAudio" onAction="ExportNoteToAudiosAll" />
           <button id="Btn11" label="プレビュー" size="large" imageMso="GoLtrDown" onAction="TestPreview" />
         </group>
-        <!--
-        <group id="GroupReset" label="ChatAI">
-          <checkBox id="sysPrompt1" label="SystemPrompt1" onAction="OnSysPrompt1" getPressed="GetSysPrompt1"/>
-          <checkBox id="sysPrompt2" label="SystemPrompt2" onAction="OnSysPrompt2" getPressed="GetSysPrompt2"/>
-          <checkBox id="sysPrompt3" label="SystemPrompt3" onAction="OnSysPrompt3" getPressed="GetUsrPrompt3"/>
-          <button id="chatAIModifyText" label="添削" size="large" imageMso="EditText" onAction="OnChatAIModifyText" />
-        </group>
-        <group id="GroupMaster" label="マスター操作">
-          <button id="Btn09" label="マスターリンク解除" size="large" imageMso="HyperlinkRemove" onAction="MakeAllSlidesIndependent" />
-          <button id="Btn10" label="未使用マスター削除" size="large" imageMso="Delete" onAction="RemoveUnusedMasters" />
-        </group>
-        -->
       </tab>
     </tabs>
   </ribbon>

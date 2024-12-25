@@ -1,6 +1,6 @@
 Attribute VB_Name = "MdlSlidesToAudio"
 
-Sub ExportNoteToAudios()
+Sub ExportNoteToAudiosAll()
     Dim sld As Slide
     Dim slds As SlideRange
     
@@ -25,6 +25,37 @@ Sub ExportNoteToAudios()
                 AddAudioToSlide sld
                 AddAutoTransitToSlide sld
                 TreattransitOnSlide sld, AddOperation
+            Else
+                Exit For
+            End If
+        Next sld
+        
+        Unload UserForm1
+    End If
+End Sub
+
+Sub ExportNoteToAudios()
+    Dim sld As Slide
+    Dim slds As SlideRange
+    
+    If doAllSlides Then
+        Set slds = ActivePresentation.Slides.Range
+    Else
+        If Not ActiveWindow.Selection.SlideRange Is Nothing Then
+            Set slds = ActiveWindow.Selection.SlideRange
+        End If
+    End If
+    
+    If Not slds Is Nothing Then
+        UserForm1.Show vbModeless
+        PlaceFormAtCenter UserForm1
+                
+        For Each sld In slds
+            DoEvents ' 他のイベント処理を許可
+            UserForm1.Label_Status.Caption = "処理中: " & sld.slideNumber & " / " & slds.Count
+            UserForm1.Repaint ' 表示を更新
+        
+            If ExportNoteToAudio(sld) Then
             Else
                 Exit For
             End If
