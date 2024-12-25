@@ -160,6 +160,13 @@ Sub RemoveAudioFromSlideRegacy(sld As Slide)
                 GoTo DeleteProcess
             End If
         End If
+            If shp.Type = msoMedia Or shp.Type = msoShapeOval Then
+            If shp.Left <= sld.Master.Width + 100 And shp.Left >= sld.Master.Width - 100 Then
+                If shp.Top <= sld.Master.Height + 100 And shp.Top >= sld.Master.Height - 100 Then
+                    GoTo DeleteProcess
+                End If
+            End If
+        End If
         GoTo NextLoop
 DeleteProcess:
         shp.Delete
