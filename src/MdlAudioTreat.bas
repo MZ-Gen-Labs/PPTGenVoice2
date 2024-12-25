@@ -38,6 +38,7 @@ Sub RemoveAudioFromSlides()
     ' 各スライドをループ処理
     For Each sld In ActivePresentation.Slides
         RemoveAudioFromSlide sld
+        RemoveAudioFromSlideRegacy sld
     Next sld
 End Sub
 
@@ -140,6 +141,31 @@ NextShape:
     Next i
 End Sub
 
+Sub RemoveAudioFromSlideRegacy(sld As Slide)
+    Dim shp As Shape
+    ' スライドに配置されたすべてのシェイプをループする
+    For Each shp In sld.Shapes
+        If shp.Type = msoMedia Or shp.Type = msoShapeOval Then
+            If shp.Left = sld.Master.Width + 50 And shp.Top = sld.Master.Height - 50 Then
+                GoTo DeleteProcess
+            ElseIf shp.Left = sld.Master.Width - 50 And shp.Top = sld.Master.Height - 50 Then
+                GoTo DeleteProcess
+            ElseIf shp.Left = sld.Master.Width - 100 And shp.Top = sld.Master.Height - 50 Then
+                GoTo DeleteProcess
+            ElseIf shp.Left = sld.Master.Width - 150 And shp.Top = sld.Master.Height - 50 Then
+                GoTo DeleteProcess
+            ElseIf shp.Left = sld.Master.Width - 200 And shp.Top = sld.Master.Height - 50 Then
+                GoTo DeleteProcess
+            ElseIf shp.Left = sld.Master.Width - 250 And shp.Top = sld.Master.Height - 50 Then
+                GoTo DeleteProcess
+            End If
+        End If
+        GoTo NextLoop
+DeleteProcess:
+        shp.Delete
+NextLoop:
+    Next shp
+End Sub
 
 
 Sub MoveAudioInSlide(sld As Slide)
