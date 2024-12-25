@@ -34,14 +34,14 @@ Private Const InitialVoiceId As Long = 497929760
 Private Function GetSettingsFilePath() As String
     Dim localAppDataPath As String
     localAppDataPath = Environ("LOCALAPPDATA")
-    
+
     ' xmalアドイン用のフォルダを作成（存在しない場合）
     Dim xmalFolderPath As String
     xmalFolderPath = localAppDataPath & "\xmal_addin"
     If Dir(xmalFolderPath, vbDirectory) = "" Then
         MkDir xmalFolderPath
     End If
-    
+
     GetSettingsFilePath = xmalFolderPath & "\" & SettingsFileName
 End Function
 
@@ -49,7 +49,7 @@ End Function
 Sub InitializeVariables()
     Dim settingsFilePath As String
     settingsFilePath = GetSettingsFilePath()
-    
+
     If FileExists(settingsFilePath) Then
         LoadSettings
     Else
@@ -69,9 +69,9 @@ Sub ResetSettings()
     processDiff = InitialProcessDiff
     voicePort = InitialVoicePort
     voiceId = InitialVoiceId
-    
+
     SaveSettings
-    
+
     ' リボンUIの更新
     If Not Ribbon Is Nothing Then
         Ribbon.InvalidateControl "startDelayBox"
@@ -84,8 +84,25 @@ Sub ResetSettings()
         Ribbon.InvalidateControl "audioXPositionDropdown"
         Ribbon.InvalidateControl "voicePortBox"
         Ribbon.InvalidateControl "voiceIdBox"
+    Else
+        Debug.Print "Ribbon オブジェクトが Nothing のため、リボンの更新をスキップします。"
+        Call GetRibbonObject ' 再初期化を試みる
+        If Not Ribbon Is Nothing Then
+            Ribbon.InvalidateControl "startDelayBox"
+            Ribbon.InvalidateControl "endDelayBox"
+            Ribbon.InvalidateControl "transitTimeBox"
+            Ribbon.InvalidateControl "doAllSlidesBox"
+            Ribbon.InvalidateControl "doOverrideBox"
+            Ribbon.InvalidateControl "useAudioFolderBox"
+            Ribbon.InvalidateControl "processDiffBox"
+            Ribbon.InvalidateControl "audioXPositionDropdown"
+            Ribbon.InvalidateControl "voicePortBox"
+            Ribbon.InvalidateControl "voiceIdBox"
+        Else
+            MsgBox "リボンオブジェクトの再取得に失敗しました。", vbCritical
+        End If
     End If
-    
+
     MsgBox "Settings have been reset to default values.", vbInformation
     Debug.Print "Settings reset to default values"
 End Sub
@@ -94,7 +111,7 @@ End Sub
 Sub OnResetSettings(control As IRibbonControl)
     Dim response As VbMsgBoxResult
     response = MsgBox("変数を初期化しますか?", vbYesNo + vbQuestion, "変数初期化")
-    
+
     If response = vbYes Then
         ResetSettings
     End If
@@ -109,6 +126,7 @@ End Sub
 ' XML UI コールバック
 
 Sub OnVoiceIdChange(control As IRibbonControl, text As String)
+    If Ribbon Is Nothing Then Call HandleRibbonLoss: Exit Sub
     If IsNumeric(text) Then
         voiceId = CLng(text)
         SaveSettings  ' 設定変更時に即座に保存
@@ -119,6 +137,7 @@ Sub OnVoiceIdChange(control As IRibbonControl, text As String)
 End Sub
 
 Sub OnVoicePortChange(control As IRibbonControl, text As String)
+    If Ribbon Is Nothing Then Call HandleRibbonLoss: Exit Sub
     If IsNumeric(text) Then
         voicePort = CLng(text)
         SaveSettings  ' 設定変更時に即座に保存
@@ -129,6 +148,7 @@ Sub OnVoicePortChange(control As IRibbonControl, text As String)
 End Sub
 
 Sub OnStartDelayChange(control As IRibbonControl, text As String)
+    If Ribbon Is Nothing Then Call HandleRibbonLoss: Exit Sub
     If IsNumeric(text) Then
         startDelay = CDbl(text)
         SaveSettings  ' 設定変更時に即座に保存
@@ -139,6 +159,7 @@ Sub OnStartDelayChange(control As IRibbonControl, text As String)
 End Sub
 
 Sub OnEndDelayChange(control As IRibbonControl, text As String)
+    If Ribbon Is Nothing Then Call HandleRibbonLoss: Exit Sub
     If IsNumeric(text) Then
         endDelay = CDbl(text)
         SaveSettings  ' 設定変更時に即座に保存
@@ -149,6 +170,7 @@ Sub OnEndDelayChange(control As IRibbonControl, text As String)
 End Sub
 
 Sub OnTransitTimeChange(control As IRibbonControl, text As String)
+    If Ribbon Is Nothing Then Call HandleRibbonLoss: Exit Sub
     If IsNumeric(text) Then
         transitTime = CDbl(text)
         SaveSettings  ' 設定変更時に即座に保存
@@ -179,6 +201,7 @@ Sub OnProcessDiffChange(control As IRibbonControl, pressed As Boolean)
 End Sub
 
 Sub OnAudioXPositionChange(control As IRibbonControl, id As String, index As Integer)
+    If Ribbon Is Nothing Then Call HandleRibbonLoss: Exit Sub
     Select Case id
         Case "pos50"
             audioXPosition = 50
@@ -363,6 +386,35 @@ Sub TestPreview()
     On Error GoTo 0
 End Sub
 
+' リボンオブジェクトを取得する処理
+Sub GetRibbonObject()
+    Dim objAddIn As COMAddIn
 
+    On Error Resume Next
+    Set objAddIn = Application.COMAddIns("PPTGenVoice2.ThisAddIn") ' あなたのアドインの ProgID
+    On Error GoTo 0
 
+    If Not objAddIn Is Nothing Then
+        ' Ribbon オブジェクトを再取得
+        On Error Resume Next
+        Set Ribbon = objAddIn.Object.GetRibbonUI() ' IRibbonExtensibility インターフェースの GetRibbonUI メソッドを使用
+        On Error GoTo 0
+        If Ribbon Is Nothing Then
+            Debug.Print "IRibbonUI オブジェクトの再取得に失敗しました。"
+        End If
+    Else
+        Debug.Print "COMAddIn オブジェクトの取得に失敗しました。"
+    End If
+End Sub
+
+' リボンオブジェクトが Nothing だった場合の共通処理
+Sub HandleRibbonLoss()
+    Debug.Print "Ribbon オブジェクトが Nothing です。再初期化を試みます。"
+    Call GetRibbonObject ' Ribbon オブジェクトを再取得
+    If Not Ribbon Is Nothing Then
+        InitializeVariables ' 初期化処理を再度実行
+    Else
+        MsgBox "リボンオブジェクトの再取得に失敗しました。", vbCritical
+    End If
+End Sub
 
