@@ -1,12 +1,4 @@
-VERSION 1.0 CLASS
-BEGIN
-  MultiUse = -1  'True
-END
-Attribute VB_Name = "VoicevoxSynthesizer"
-Attribute VB_GlobalNameSpace = False
-Attribute VB_Creatable = False
-Attribute VB_PredeclaredId = False
-Attribute VB_Exposed = False
+Attribute VB_Name = "MdlVoiceSynthesizer"
 Option Explicit
 
 ' Windows API宣言
@@ -24,7 +16,7 @@ Private baseUrl As String
 Private speakerID As Long
 
 ' 初期化メソッド
-Public Sub Initialize(ByVal apiUrl As String, ByVal speaker As Long)
+Public Sub VoiceInitialize(ByVal apiUrl As String, ByVal speaker As Long)
     baseUrl = apiUrl
     speakerID = speaker
 End Sub
@@ -212,6 +204,8 @@ ErrorHandler:
     MsgBox "MP3変換中にエラーが発生しました: " & Err.Description, vbCritical
     ConvertWavToMp3 = ""
 End Function
+
+
 
 
 

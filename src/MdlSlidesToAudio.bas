@@ -1,6 +1,6 @@
 Attribute VB_Name = "MdlSlidesToAudio"
 
-Sub TestCurrent()
+Sub ExportNoteToAudios()
     Dim sld As Slide
     Dim slds As SlideRange
     
@@ -21,24 +21,27 @@ Sub TestCurrent()
             UserForm1.Label_Status.Caption = "処理中: " & sld.slideNumber & " / " & slds.Count
             UserForm1.Repaint ' 表示を更新
         
-            ExportNoteToAudio sld
-            AddAudioToSlide sld
-            AddAutoTransitToSlide sld
-            TreattransitOnSlide sld, AddOperation
+            If ExportNoteToAudio(sld) Then
+                AddAudioToSlide sld
+                AddAutoTransitToSlide sld
+                TreattransitOnSlide sld, AddOperation
+            Else
+                Exit For
+            End If
         Next sld
         
         Unload UserForm1
     End If
 End Sub
 
-Sub ExportNoteToAudio(sld As Slide)
-    Dim synthesizer As VoicevoxSynthesizer
-    Set synthesizer = New VoicevoxSynthesizer
+Function ExportNoteToAudio(sld As Slide) As Boolean
+    ExportNoteToAudio = False
+    
     Dim baseUrl As String
     Dim speakerID As Long
     baseUrl = "http://localhost:" & CStr(voicePort)
     speakerID = voiceId
-    synthesizer.Initialize baseUrl, speakerID
+    VoiceInitialize baseUrl, speakerID
 
     Dim textFilePath As String
     Dim textBasepath As String
@@ -55,18 +58,20 @@ Sub ExportNoteToAudio(sld As Slide)
 
     ' ノートのテキストを抽出する
     notesText = sld.NotesPage.Shapes.Placeholders(2).TextFrame.TextRange.text
-
-    ' スライド番号を取得する
-    Dim slideNumber As Long
-    baseFileName = sld.slideNumber
+    If notesText <> "" Then
+        ' スライド番号を取得する
+        Dim slideNumber As Long
+        baseFileName = sld.slideNumber
+        
+        saveFolder = audioFldrpath
     
-    saveFolder = audioFldrpath
-
-    If synthesizer.GenerateVoiceFile(notesText, saveFolder, baseFileName) Then
-    Else
-        ' MsgBox "音声ファイルの生成に失敗しました。"
+        If GenerateVoiceFile(notesText, saveFolder, baseFileName) Then
+            ExportNoteToAudio = True
+        Else
+            ' MsgBox "音声ファイルの生成に失敗しました。"
+        End If
     End If
-End Sub
+End Function
 
 
 Sub PlaceFormAtCenter(frm As Object)

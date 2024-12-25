@@ -31,25 +31,13 @@ Sub AddAudioToSlides()
     Next sld
 End Sub
 
+
 Sub RemoveAudioFromSlides()
     Dim sld As Slide
-    Dim slds As SlideRange
-    
-    If doAllSlides Then
-        Set slds = ActivePresentation.Slides.Range
-    Else
-        ' 選択が有効かを確認
-        If ActiveWindow.Selection.Type = ppSelectionSlides Then
-            ' スライド範囲を取得
-            If Not ActiveWindow.Selection.SlideRange Is Nothing Then
-                Set slds = ActiveWindow.Selection.SlideRange
-            End If
-        End If
-    End If
-    
-    For Each sld In slds
+
+    ' 各スライドをループ処理
+    For Each sld In ActivePresentation.Slides
         RemoveAudioFromSlide sld
-        TreattransitOnSlide sld, RemoveOperation
     Next sld
 End Sub
 
@@ -77,13 +65,6 @@ Sub MoveAudioInSlides()
 End Sub
 
 
-
-
-
-
-
-
-
 ' スライドへの音声配置処理
 Sub AddAudioToSlide(sld As Slide)
     Dim shp As Shape
@@ -92,9 +73,9 @@ Sub AddAudioToSlide(sld As Slide)
     Dim slideNumber As Long
     Dim effect As effect
     Dim presentationName As String
-    
+
     slideNumber = sld.slideNumber
-    
+
     If useAudioFolder Then
         filePath = OneDriveUrlToLocalPath(ActivePresentation.Path) & "\audio\"
     Else
@@ -102,7 +83,7 @@ Sub AddAudioToSlide(sld As Slide)
         presentationName = Left(ActivePresentation.Name, InStrRev(ActivePresentation.Name, ".") - 1)
         filePath = OneDriveUrlToLocalPath(ActivePresentation.Path) & "\" & presentationName & "\"
     End If
-    
+
     audioFile = ""
     ' 音声ファイルのパスを定義する
     If Dir(filePath & slideNumber & ".wav") <> "" Then
@@ -110,13 +91,17 @@ Sub AddAudioToSlide(sld As Slide)
     ElseIf Dir(filePath & slideNumber & ".mp3") <> "" Then
         audioFile = filePath & slideNumber & ".mp3"
     End If
-    
+
     If audioFile <> "" Then
         If doOverride Then
             RemoveAudioFromSlide sld
         End If
         ' スライドに音声ファイルを追加する
         Set shp = sld.Shapes.AddMediaObject2(audioFile, msoFalse, msoTrue, sld.Master.Width + audioXPosition, sld.Master.Height - 50)
+
+        ' **ここに音声オブジェクトにタグを設定するコードを追加**
+        shp.Tags.Add Name:="AudioObject", Value:="True" ' 例：AudioObjectという名前でTrueの値を設定
+
         ' 音声ファイルにアニメーション効果を追加する
         Set effect = sld.TimeLine.MainSequence.AddEffect(shp, msoAnimEffectMediaPlay, Trigger:=msoAnimTriggerWithPrevious)
         ' アニメーションの開始を遅らせる
@@ -132,28 +117,27 @@ End Sub
 
 Sub RemoveAudioFromSlide(sld As Slide)
     Dim shp As Shape
-    ' スライドに配置されたすべてのシェイプをループする
-    For Each shp In sld.Shapes
+    Dim i As Long
+    For i = sld.Shapes.Count To 1 Step -1
+        Set shp = sld.Shapes(i)
+
+        ' 音声オブジェクトの場合
         If shp.Type = msoMedia Then
-            If shp.Left = sld.Master.Width + 50 And shp.Top = sld.Master.Height - 50 Then
-                GoTo DeleteProcess
-            ElseIf shp.Left = sld.Master.Width - 50 And shp.Top = sld.Master.Height - 50 Then
-                GoTo DeleteProcess
-            ElseIf shp.Left = sld.Master.Width - 100 And shp.Top = sld.Master.Height - 50 Then
-                GoTo DeleteProcess
-            ElseIf shp.Left = sld.Master.Width - 150 And shp.Top = sld.Master.Height - 50 Then
-                GoTo DeleteProcess
-            ElseIf shp.Left = sld.Master.Width - 200 And shp.Top = sld.Master.Height - 50 Then
-                GoTo DeleteProcess
-            ElseIf shp.Left = sld.Master.Width - 250 And shp.Top = sld.Master.Height - 50 Then
-                GoTo DeleteProcess
+            If shp.Tags.Item("AudioObject") <> "" Then
+                shp.Delete
+                GoTo NextShape ' 削除したら次のシェイプへ
             End If
         End If
-        GoTo NextLoop
-DeleteProcess:
-        shp.Delete
-NextLoop:
-    Next shp
+
+        ' 楕円の場合
+        If shp.AutoShapeType = msoShapeOval Then
+            If shp.Tags.Item("AudioControl") <> "" Then
+                shp.Delete
+                GoTo NextShape ' 削除したら次のシェイプへ
+            End If
+        End If
+NextShape:
+    Next i
 End Sub
 
 
@@ -336,6 +320,9 @@ NextShape:
         posY = sld.Master.Height - 50
     
         Set shp = sld.Shapes.AddShape(msoShapeOval, posX, posY, 50, 50)
+        
+        ' **ここにタグを設定するコードを追加**
+        shp.Tags.Add Name:="AudioControl", Value:="True"
     
         shp.Fill.Transparency = 1
         shp.line.Transparency = 1
