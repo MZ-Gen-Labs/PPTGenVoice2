@@ -12,6 +12,8 @@ Private Declare PtrSafe Function WideCharToMultiByte Lib "kernel32" ( _
     ByVal lpDefaultChar As LongPtr, _
     ByVal lpUsedDefaultChar As LongPtr) As Long
 
+Private url As String
+Private port As String
 Private baseUrl As String
 Private speakerID As Long
 
