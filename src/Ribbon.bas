@@ -11,10 +11,6 @@ Public doOverride As Boolean
 Public useAudioFolder As Boolean
 Public processDiff As Boolean
 Public Ribbon As IRibbonUI
-Public voiceUrl As String
-Public voicePort As Long
-Public voiceId As Long
-Public ffmpegPath As String
 
 Private sysPrompt1Text As String
 Private sysPrompt2Text As String
@@ -29,10 +25,6 @@ Private Const InitialDoOverride As Boolean = True
 Private Const InitialUseAudioFolder As Boolean = False
 Private Const InitialProcessDiff As Boolean = True
 Private Const SettingsFileName As String = "xmal_settings.txt"
-Private Const InitialVoiceUrl As String = "http://localhost"
-Private Const InitialVoicePort As Long = 10101
-Private Const InitialVoiceId As Long = 497929760
-Private Const InitialFfmpegPath As String = "C:\tool\ffmpeg\bin\ffmpeg.exe"
 
 
 ' 設定ファイルのパスを取得する関数
@@ -72,10 +64,6 @@ Sub ResetSettings()
     doOverride = InitialDoOverride
     useAudioFolder = InitialUseAudioFolder
     processDiff = InitialProcessDiff
-    voiceUrl = InitialVoiceUrl
-    voicePort = InitialVoicePort
-    voiceId = InitialVoiceId
-    ffmpegPath = InitialFfmpegPath
 
     SaveSettings
 
@@ -89,10 +77,6 @@ Sub ResetSettings()
         Ribbon.InvalidateControl "useAudioFolderBox"
         Ribbon.InvalidateControl "processDiffBox"
         Ribbon.InvalidateControl "audioXPositionDropdown"
-        Ribbon.InvalidateControl "voiceUrlBox"
-        Ribbon.InvalidateControl "voicePortBox"
-        Ribbon.InvalidateControl "voiceIdBox"
-        Ribbon.InvalidateControl "ffmpegPathBox"
     Else
         Debug.Print "Ribbon オブジェクトが Nothing のため、リボンの更新をスキップします。"
         Call GetRibbonObject ' 再初期化を試みる
@@ -105,10 +89,6 @@ Sub ResetSettings()
             Ribbon.InvalidateControl "useAudioFolderBox"
             Ribbon.InvalidateControl "processDiffBox"
             Ribbon.InvalidateControl "audioXPositionDropdown"
-            Ribbon.InvalidateControl "voiceUrlBox"
-            Ribbon.InvalidateControl "voicePortBox"
-            Ribbon.InvalidateControl "voiceIdBox"
-            Ribbon.InvalidateControl "ffmpegPathBox"
         Else
             MsgBox "リボンオブジェクトの再取得に失敗しました。", vbCritical
         End If
@@ -135,34 +115,6 @@ Sub RibbonOnLoad(ribbonUI As IRibbonUI)
 End Sub
 
 ' XML UI コールバック
-
-Sub OnVoiceUrlChange(control As IRibbonControl, text As String)
-    If Ribbon Is Nothing Then Call HandleRibbonLoss: Exit Sub
-    voiceUrl = text
-    SaveSettings  ' 設定変更時に即座に保存
-End Sub
-
-Sub OnVoiceIdChange(control As IRibbonControl, text As String)
-    If Ribbon Is Nothing Then Call HandleRibbonLoss: Exit Sub
-    If IsNumeric(text) Then
-        voiceId = CLng(text)
-        SaveSettings  ' 設定変更時に即座に保存
-    Else
-        MsgBox "Please enter a valid number.", vbExclamation
-        Ribbon.InvalidateControl control.id
-    End If
-End Sub
-
-Sub OnVoicePortChange(control As IRibbonControl, text As String)
-    If Ribbon Is Nothing Then Call HandleRibbonLoss: Exit Sub
-    If IsNumeric(text) Then
-        voicePort = CLng(text)
-        SaveSettings  ' 設定変更時に即座に保存
-    Else
-        MsgBox "Please enter a valid number.", vbExclamation
-        Ribbon.InvalidateControl control.id
-    End If
-End Sub
 
 Sub OnStartDelayChange(control As IRibbonControl, text As String)
     If Ribbon Is Nothing Then Call HandleRibbonLoss: Exit Sub
@@ -236,11 +188,6 @@ Sub OnAudioXPositionChange(control As IRibbonControl, id As String, index As Int
     SaveSettings  ' 設定変更時に即座に保存
 End Sub
 
-Sub OnFfmpegPathChange(control As IRibbonControl, text As String)
-    If Ribbon Is Nothing Then Call HandleRibbonLoss: Exit Sub
-    ffmpegPath = text
-    SaveSettings  ' 設定変更時に即座に保存
-End Sub
 
 ' 初期値を取得するコールバック
 Sub GetStartDelay(control As IRibbonControl, ByRef returnedVal)
@@ -271,22 +218,6 @@ Sub GetProcessDiff(control As IRibbonControl, ByRef returnedVal)
     returnedVal = processDiff
 End Sub
 
-Sub GetVoiceUrl(control As IRibbonControl, ByRef returnedVal)
-    returnedVal = voiceUrl
-End Sub
-
-Sub GetVoicePort(control As IRibbonControl, ByRef returnedVal)
-    returnedVal = voicePort
-End Sub
-
-Sub GetVoiceId(control As IRibbonControl, ByRef returnedVal)
-    returnedVal = voiceId
-End Sub
-
-Sub GetFfmpegPath(control As IRibbonControl, ByRef returnedVal)
-    returnedVal = ffmpegPath
-End Sub
-
 Sub GetAudioXPositionIndex(control As IRibbonControl, ByRef returnedVal)
     Select Case audioXPosition
         Case 50
@@ -313,11 +244,7 @@ Sub ShowVariables(control As IRibbonControl)
            "Do All Slides: " & doAllSlides & vbCrLf & _
            "Do Override: " & doOverride & vbCrLf & _
            "Use Audio Folder: " & useAudioFolder & vbCrLf & _
-           "Process Diff Text: " & processDiff & vbCrLf & _
-           "Voice Url: " & voiceUrl & vbCrLf & _
-           "Voice Port: " & voicePort & vbCrLf & _
-           "Voice ID: " & voiceId & _
-           "ffmpeg path: " & ffmpegPath
+           "Process Diff Text: " & processDiff
 End Sub
 
 ' 設定を保存する関数
@@ -336,10 +263,6 @@ Sub SaveSettings()
     Print #fileNum, "DoOverride=" & doOverride
     Print #fileNum, "UseAudioFolder=" & useAudioFolder
     Print #fileNum, "ProcessDiff=" & processDiff
-    Print #fileNum, "VoiceUrl=" & voiceUrl
-    Print #fileNum, "VoicePort=" & voicePort
-    Print #fileNum, "VoiceId=" & voiceId
-    Print #fileNum, "FfmpegPath=" & ffmpegPath
     Close #fileNum
 '    MsgBox "Settings saved successfully to " & settingsFilePath, vbInformation
     Debug.Print "Settings saved successfully to " & settingsFilePath
@@ -379,16 +302,8 @@ Sub LoadSettings()
                     doOverride = CBool(parts(1))
                 Case "UseAudioFolder"
                     useAudioFolder = CBool(parts(1))
-                Case "VoiceUrl"
-                    voiceUrl = parts(1)
                 Case "ProcessDiff"
                     processDiff = CBool(parts(1))
-                Case "VoicePort"
-                    voicePort = CLng(parts(1))
-                Case "VoiceId"
-                    voiceId = CLng(parts(1))
-                Case "FfmpegPath"
-                    ffmpegPath = parts(1)
             End Select
         End If
     Loop
