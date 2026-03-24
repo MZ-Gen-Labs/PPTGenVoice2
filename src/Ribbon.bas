@@ -11,6 +11,7 @@ Public doOverride As Boolean
 Public useAudioFolder As Boolean
 Public processDiff As Boolean
 Public Ribbon As IRibbonUI
+Public circleXPosition As Integer
 
 Private sysPrompt1Text As String
 Private sysPrompt2Text As String
@@ -25,6 +26,7 @@ Private Const InitialDoOverride As Boolean = True
 Private Const InitialUseAudioFolder As Boolean = False
 Private Const InitialProcessDiff As Boolean = True
 Private Const SettingsFileName As String = "xmal_settings.txt"
+Private Const InitialCircleXPosition As Integer = -50
 
 
 ' 設定ファイルのパスを取得する関数
@@ -64,6 +66,8 @@ Sub ResetSettings()
     doOverride = InitialDoOverride
     useAudioFolder = InitialUseAudioFolder
     processDiff = InitialProcessDiff
+circleXPosition = InitialCircleXPosition
+Ribbon.InvalidateControl "circleXPositionDropdown"
 
     SaveSettings
 
@@ -258,6 +262,7 @@ Sub SaveSettings()
     Print #fileNum, "StartDelay=" & startDelay
     Print #fileNum, "EndDelay=" & endDelay
     Print #fileNum, "AudioXPosition=" & audioXPosition
+    Print #fileNum, "CircleXPosition=" & circleXPosition
     Print #fileNum, "TransitTime=" & transitTime
     Print #fileNum, "DoAllSlides=" & doAllSlides
     Print #fileNum, "DoOverride=" & doOverride
@@ -294,6 +299,8 @@ Sub LoadSettings()
                     endDelay = CDbl(parts(1))
                 Case "AudioXPosition"
                     audioXPosition = CInt(parts(1))
+                Case "CircleXPosition"
+                    circleXPosition = CInt(parts(1))
                 Case "TransitTime"
                     transitTime = CDbl(parts(1))
                 Case "DoAllSlides"
@@ -372,3 +379,26 @@ Sub HandleRibbonLoss()
     End If
 End Sub
 
+Sub OnCircleXPositionChange(control As IRibbonControl, id As String, index As Integer)
+    If Ribbon Is Nothing Then Call HandleRibbonLoss: Exit Sub
+    Select Case id
+        Case "circle50":  circleXPosition = 50
+        Case "circle-50": circleXPosition = -50
+        Case "circle-100": circleXPosition = -100
+        Case "circle-150": circleXPosition = -150
+        Case "circle-200": circleXPosition = -200
+        Case "circle-250": circleXPosition = -250
+    End Select
+    SaveSettings
+End Sub
+
+Sub GetCircleXPositionIndex(control As IRibbonControl, ByRef returnedVal)
+    Select Case circleXPosition
+        Case 50: returnedVal = 0
+        Case -50: returnedVal = 1
+        Case -100: returnedVal = 2
+        Case -150: returnedVal = 3
+        Case -200: returnedVal = 4
+        Case -250: returnedVal = 5
+    End Select
+End Sub

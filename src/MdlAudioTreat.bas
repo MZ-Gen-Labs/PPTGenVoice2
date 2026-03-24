@@ -313,18 +313,9 @@ Sub TreattransitOnSlide(sld As Slide, optype As operationType)
     shpcnt = 0
     
     For Each shp In sld.Shapes
-        If shp.AutoShapeType = msoShapeOval Then
-            If shp.Left = sld.Master.Width + 50 And shp.Top = sld.Master.Height - 50 Then
-                GoTo AnimationProcess
-            ElseIf shp.Left = sld.Master.Width - 50 And shp.Top = sld.Master.Height - 50 Then
-                GoTo AnimationProcess
-            ElseIf shp.Left = sld.Master.Width - 100 And shp.Top = sld.Master.Height - 50 Then
-                GoTo AnimationProcess
-            ElseIf shp.Left = sld.Master.Width - 150 And shp.Top = sld.Master.Height - 50 Then
-                GoTo AnimationProcess
-            ElseIf shp.Left = sld.Master.Width - 200 And shp.Top = sld.Master.Height - 50 Then
-                GoTo AnimationProcess
-            ElseIf shp.Left = sld.Master.Width - 250 And shp.Top = sld.Master.Height - 50 Then
+If shp.AutoShapeType = msoShapeOval Then
+            ' AudioControlタグが付いている図形なら無条件でアニメーション処理へ
+            If shp.Tags.Item("AudioControl") = "True" Then
                 GoTo AnimationProcess
             End If
         End If
@@ -367,9 +358,10 @@ NextShape:
     Next shp
     
     If (optype = AddOperation) And (shpcnt = 0) Then
-        Dim posX
+Dim posX
         Dim posY
-        posX = sld.Master.Width + 50
+        ' 固定値の 50 ではなく、リボンで設定した circleXPosition を使う
+        posX = sld.Master.Width + circleXPosition 
         posY = sld.Master.Height - 50
     
         Set shp = sld.Shapes.AddShape(msoShapeOval, posX, posY, 50, 50)
