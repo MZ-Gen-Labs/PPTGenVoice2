@@ -9,12 +9,6 @@
           <button id="Btn07" label="ノート削除" size="large" imageMso="Clear" onAction="RemoveNoteinSlides" />
           <button id="Btn08" label="テキストファイルフルパスコピー" size="large" imageMso="Copy" onAction="CopyTextFullpath" />
         </group>
-        <group id="GroupAudioGen" label="音声ファイル生成">
-          <button id="Btn00" label="音声ファイル生成" size="large" imageMso="AnimationAudio" onAction="ExportNoteToAudios" />
-          <editBox id="voicePortBox" label="ポート番号" onChange="OnVoicePortChange" getText="GetVoicePort" />
-          <editBox id="voiceIdBox" label="音声ID" onChange="OnVoiceIdChange" getText="GetVoiceId" />
-          
-        </group>
         <group id="GroupAudio" label="音声ファイル操作">
           <button id="Btn01" label="音声ファイル追加" size="large" imageMso="AnimationAudio" onAction="AddAudioToSlides" />
           <button id="Btn02" label="音声ファイル位置調整" size="large" imageMso="GoLtrDown" onAction="MoveAudioInSlides" />
@@ -40,7 +34,6 @@
           <button id="resetSettingsButton" label="変数初期化" size="large" imageMso="ResetToTemplate" onAction="OnResetSettings" />
         </group>
         <group id="GroupAll" label="PPT実行">
-          <button id="Btn09" label="全処理" size="large" imageMso="AnimationAudio" onAction="ExportNoteToAudiosAll" />
           <button id="Btn11" label="プレビュー" size="large" imageMso="GoLtrDown" onAction="TestPreview" />
         </group>
       </tab>
