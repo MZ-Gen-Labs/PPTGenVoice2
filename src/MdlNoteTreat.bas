@@ -152,7 +152,7 @@ Sub AddNoteInSlides()
         If doOverride Then
             sld.NotesPage.Shapes.Placeholders(2).TextFrame.TextRange.text = slideText
         Else
-            If sld.NotesPage.Shapes.Placeholders(2).TextFrame.TextRange.text = Null Then
+            If sld.NotesPage.Shapes.Placeholders(2).TextFrame.TextRange.text = "" Then
                 sld.NotesPage.Shapes.Placeholders(2).TextFrame.TextRange.text = slideText
             End If
         End If
