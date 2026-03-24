@@ -12,15 +12,15 @@ Sub AddAudioToSlides()
     Dim sld As Slide
     Dim slds As SlideRange
     
-    If doAllSlides Then
+If doAllSlides Then
         Set slds = ActivePresentation.Slides.Range
     Else
-        ' 選択が有効かを確認
+        ' サムネイルでスライドが選択されている場合
         If ActiveWindow.Selection.Type = ppSelectionSlides Then
-            ' スライド範囲を取得
-            If Not ActiveWindow.Selection.SlideRange Is Nothing Then
-                Set slds = ActiveWindow.Selection.SlideRange
-            End If
+            Set slds = ActiveWindow.Selection.SlideRange
+        Else
+            ' 図形やテキスト選択時は、現在表示中のスライドを自動取得
+            Set slds = ActivePresentation.Slides.Range(ActiveWindow.View.Slide.SlideIndex)
         End If
     End If
     
