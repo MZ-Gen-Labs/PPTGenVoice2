@@ -361,7 +361,7 @@ NextShape:
 Dim posX
         Dim posY
         ' 固定値の 50 ではなく、リボンで設定した circleXPosition を使う
-        posX = sld.Master.Width + circleXPosition 
+        posX = sld.Master.Width + circleXPosition
         posY = sld.Master.Height - 50
     
         Set shp = sld.Shapes.AddShape(msoShapeOval, posX, posY, 50, 50)
