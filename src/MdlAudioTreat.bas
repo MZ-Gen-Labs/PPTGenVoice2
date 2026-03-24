@@ -15,12 +15,22 @@ Sub AddAudioToSlides()
 If doAllSlides Then
         Set slds = ActivePresentation.Slides.Range
     Else
-        ' サムネイルでスライドが選択されている場合
-        If ActiveWindow.Selection.Type = ppSelectionSlides Then
-            Set slds = ActiveWindow.Selection.SlideRange
-        Else
-            ' 図形やテキスト選択時は、現在表示中のスライドを自動取得
+        On Error Resume Next ' ▼ エラーが発生してもプログラムを止めずに次へ進む
+        
+        ' 1. まずは現在の選択状態（サムネイル、図形、テキストなど）からスライドの取得を試みる
+        Set slds = ActiveWindow.Selection.SlideRange
+        
+        ' 2. リボン操作中などで上記が失敗(Nothing)した場合、現在画面に表示されているスライドを取得
+        If slds Is Nothing Then
             Set slds = ActivePresentation.Slides.Range(ActiveWindow.View.Slide.SlideIndex)
+        End If
+        
+        On Error GoTo 0 ' ▲ エラー無視の設定を解除（以降の予期せぬエラーは通常通り表示する）
+        
+        ' 3. 万が一、何らかの理由でどうしても取得できなかった場合の安全装置
+        If slds Is Nothing Then
+            MsgBox "スライドを特定できませんでした。スライド画面を一度クリックしてから再実行してください。", vbExclamation, "スライド特定エラー"
+            Exit Sub
         End If
     End If
     
@@ -46,15 +56,25 @@ Sub MoveAudioInSlides()
     Dim sld As Slide
     Dim slds As SlideRange
     
-    If doAllSlides Then
+If doAllSlides Then
         Set slds = ActivePresentation.Slides.Range
     Else
-        ' 選択が有効かを確認
-        If ActiveWindow.Selection.Type = ppSelectionSlides Then
-            ' スライド範囲を取得
-            If Not ActiveWindow.Selection.SlideRange Is Nothing Then
-                Set slds = ActiveWindow.Selection.SlideRange
-            End If
+        On Error Resume Next ' ▼ エラーが発生してもプログラムを止めずに次へ進む
+        
+        ' 1. まずは現在の選択状態（サムネイル、図形、テキストなど）からスライドの取得を試みる
+        Set slds = ActiveWindow.Selection.SlideRange
+        
+        ' 2. リボン操作中などで上記が失敗(Nothing)した場合、現在画面に表示されているスライドを取得
+        If slds Is Nothing Then
+            Set slds = ActivePresentation.Slides.Range(ActiveWindow.View.Slide.SlideIndex)
+        End If
+        
+        On Error GoTo 0 ' ▲ エラー無視の設定を解除（以降の予期せぬエラーは通常通り表示する）
+        
+        ' 3. 万が一、何らかの理由でどうしても取得できなかった場合の安全装置
+        If slds Is Nothing Then
+            MsgBox "スライドを特定できませんでした。スライド画面を一度クリックしてから再実行してください。", vbExclamation, "スライド特定エラー"
+            Exit Sub
         End If
     End If
     
