@@ -26,6 +26,11 @@ Sub ExportNoteToText()
     Dim filePath As String
     Dim appath As String
 
+    If ActivePresentation.Path = "" Then
+        MsgBox "プレゼンテーションが保存されていません。一度ファイルを保存してから実行してください。", vbExclamation, "保存確認"
+        Exit Sub
+    End If
+
     On Error GoTo ErrorHandler ' エラーハンドラの定義
     textFileName = GetTextFullpath
     
@@ -72,6 +77,11 @@ Sub ImportNoteFromText()
     
     On Error GoTo ErrorHandler ' エラーハンドラの定義
     textFileName = GetTextFullpath
+    
+    If Dir(textFileName) = "" Then
+        MsgBox "インポートするテキストファイルが見つかりません。" & vbCrLf & "先に「ノート → テキストファイル」を実行してください。", vbExclamation, "ファイル不在"
+        Exit Sub
+    End If    
     
     ' ファイルを開く
     textFile = FreeFile
