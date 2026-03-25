@@ -115,6 +115,10 @@ Sub AddAudioToSlide(sld As Slide)
         filePath = OneDriveUrlToLocalPath(ActivePresentation.Path) & "\" & presentationName & "\"
     End If
 
+    If Dir(filePath, vbDirectory) = "" Then
+        Exit Sub ' フォルダが無ければ音声ファイルもないので処理をスキップ
+    End If
+
     audioFile = ""
     ' 音声ファイルのパスを定義する
     If Dir(filePath & slideNumber & ".wav") <> "" Then

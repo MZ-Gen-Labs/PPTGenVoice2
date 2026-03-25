@@ -23,6 +23,14 @@
             <item id="pos-200" label="-200" />
             <item id="pos-250" label="-250" />
           </dropDown>
+          <dropDown id="circleXPositionDropdown" label="ダミー円位置" onAction="OnCircleXPositionChange" getSelectedItemIndex="GetCircleXPositionIndex">
+            <item id="circle50" label="50" />
+            <item id="circle-50" label="-50" />
+            <item id="circle-100" label="-100" />
+            <item id="circle-150" label="-150" />
+            <item id="circle-200" label="-200" />
+            <item id="circle-250" label="-250" />
+          </dropDown>
           <checkBox id="useAudioFolderBox" label="audioフォルダを使用" onAction="OnUseAudioFolderChange" getPressed="GetUseAudioFolder"/>
           <separator id="separator1" />
           <button id="Btn03" label="音声ファイル削除" size="large" imageMso="Delete" onAction="RemoveAudioFromSlides" />

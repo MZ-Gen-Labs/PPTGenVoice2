@@ -36,7 +36,7 @@ Sub ExportNoteToText()
     
     ' テキストファイルを書き込みモードでオープンする
     textFile = FreeFile
-    Open textFileName For Output As textFile
+    Open textFileName For Output As #textFile
 
     ' プレゼンテーションの各スライドをループする
     For Each sld In ActivePresentation.Slides
@@ -244,8 +244,8 @@ Function GetSlideText(ByVal sld As Slide) As String
     ' バブルソートで並べ替え
     For i = 1 To shapeCount - 1
         For j = 1 To shapeCount - i
-            If shapeInfos(j).Top > shapeInfos(j + 1).Top Or _
-               (shapeInfos(j).Top = shapeInfos(j + 1).Top And shapeInfos(j).Left > shapeInfos(j + 1).Left) Then
+            If (shapeInfos(j).Top - shapeInfos(j + 1).Top > 5) Or _
+               (Abs(shapeInfos(j).Top - shapeInfos(j + 1).Top) <= 5 And shapeInfos(j).Left > shapeInfos(j + 1).Left) Then
                 temp = shapeInfos(j)
                 shapeInfos(j) = shapeInfos(j + 1)
                 shapeInfos(j + 1) = temp
