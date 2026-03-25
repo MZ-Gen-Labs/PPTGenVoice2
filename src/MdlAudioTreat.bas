@@ -53,7 +53,6 @@ Sub RemoveAudioFromSlides()
     ' 各スライドをループ処理
     For Each sld In ActivePresentation.Slides
         RemoveAudioFromSlide sld
-        RemoveAudioFromSlideRegacy sld
     Next sld
 End Sub
 

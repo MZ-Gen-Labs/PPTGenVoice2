@@ -81,7 +81,7 @@ Sub ImportNoteFromText()
     If Dir(textFileName) = "" Then
         MsgBox "インポートするテキストファイルが見つかりません。" & vbCrLf & "先に「ノート → テキストファイル」を実行してください。", vbExclamation, "ファイル不在"
         Exit Sub
-    End If    
+    End If
     
     ' ファイルを開く
     textFile = FreeFile
