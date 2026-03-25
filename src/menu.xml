@@ -32,7 +32,6 @@
             <item id="circle-250" label="-250" />
           </dropDown>
           <checkBox id="useAudioFolderBox" label="audioフォルダを使用" onAction="OnUseAudioFolderChange" getPressed="GetUseAudioFolder"/>
-          <separator id="separator1" />
           <button id="Btn03" label="音声ファイル削除" size="large" imageMso="Delete" onAction="RemoveAudioFromSlides" />
         </group>
         <group id="GroupSetting" label="設定">
@@ -42,7 +41,12 @@
           <button id="resetSettingsButton" label="変数初期化" size="large" imageMso="ResetToTemplate" onAction="OnResetSettings" />
         </group>
         <group id="GroupAll" label="PPT実行">
+          <button id="BtnMovePrev" label="前へ" imageMso="GoToPreviousRecord" onAction="MoveSlideUp" />
+          <button id="BtnMoveFirst" label="先頭へ" imageMso="GoToFirstRecord" onAction="MoveSlideToFirst" />
           <button id="Btn11" label="プレビュー" size="large" imageMso="GoLtrDown" onAction="TestPreview" />
+          <button id="BtnMoveNext" label="次へ" imageMso="GoToNextRecord" onAction="MoveSlideDown" />
+          <button id="BtnMoveLast" label="最後へ" imageMso="GoToLastRecord" onAction="MoveSlideToLast" />
+
         </group>
       </tab>
     </tabs>

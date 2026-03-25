@@ -402,3 +402,46 @@ Sub GetCircleXPositionIndex(control As IRibbonControl, ByRef returnedVal)
         Case -250: returnedVal = 5
     End Select
 End Sub
+
+' 現在表示・選択されているスライドを安全に取得する共通関数
+Function GetTargetSlide() As Slide
+    On Error Resume Next
+    Dim sld As Slide
+    If ActiveWindow.Selection.Type = ppSelectionSlides Then
+        Set sld = ActiveWindow.Selection.SlideRange(1)
+    Else
+        Set sld = ActivePresentation.Slides(ActiveWindow.View.Slide.SlideIndex)
+    End If
+    On Error GoTo 0
+    Set GetTargetSlide = sld
+End Function
+
+' スライドをトップ（先頭）に移動
+Sub MoveSlideToFirst(control As IRibbonControl)
+    ActiveWindow.View.GotoSlide index:=1
+End Sub
+
+' スライドを一つ前に移動
+Sub MoveSlideUp(control As IRibbonControl)
+    Dim currentIndex As Integer
+    currentIndex = ActiveWindow.View.Slide.SlideIndex
+    If currentIndex > 1 Then
+        ActiveWindow.View.GotoSlide index:=currentIndex - 1
+    End If
+End Sub
+
+' スライドを一つ後に移動
+Sub MoveSlideDown(control As IRibbonControl)
+    Dim currentIndex As Integer
+    Dim totalSlides As Integer
+    currentIndex = ActiveWindow.View.Slide.SlideIndex
+    totalSlides = ActivePresentation.Slides.Count
+    If currentIndex < totalSlides Then
+        ActiveWindow.View.GotoSlide index:=currentIndex + 1
+    End If
+End Sub
+
+' スライドを最後に移動
+Sub MoveSlideToLast(control As IRibbonControl)
+    ActiveWindow.View.GotoSlide index:=ActivePresentation.Slides.Count
+End Sub
