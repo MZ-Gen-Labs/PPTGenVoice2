@@ -174,7 +174,7 @@ Sub RemoveNoteinSlides()
     Dim sld As Slide
     Dim slds As SlideRange
     
-If doAllSlides Then
+    If doAllSlides Then
         Set slds = ActivePresentation.Slides.Range
     Else
         On Error Resume Next ' ▼ エラーが発生してもプログラムを止めずに次へ進む

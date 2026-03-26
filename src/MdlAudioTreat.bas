@@ -136,6 +136,12 @@ Sub AddAudioToSlide(sld As Slide)
         ' **ここに音声オブジェクトにタグを設定するコードを追加**
         shp.Tags.Add Name:="AudioObject", Value:="True" ' 例：AudioObjectという名前でTrueの値を設定
 
+        If hideAudioIcon Then
+            shp.Visible = msoFalse
+        Else
+            shp.Visible = msoTrue
+        End If
+        
         ' 音声ファイルにアニメーション効果を追加する
         Set effect = sld.TimeLine.MainSequence.AddEffect(shp, msoAnimEffectMediaPlay, Trigger:=msoAnimTriggerWithPrevious)
         ' アニメーションの開始を遅らせる
@@ -197,6 +203,12 @@ Sub MoveAudioInSlide(sld As Slide)
 MoveProcess:
         shp.Left = sld.Master.Width + audioXPosition
         shp.Top = sld.Master.Height - 50
+
+        If hideAudioIcon Then
+            shp.Visible = msoFalse
+        Else
+            shp.Visible = msoTrue
+        End If
 NextShape:
     Next shp
 End Sub

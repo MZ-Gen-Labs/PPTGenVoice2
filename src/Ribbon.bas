@@ -13,6 +13,9 @@ Public processDiff As Boolean
 Public Ribbon As IRibbonUI
 Public circleXPosition As Integer
 
+Public hideAudioIcon As Boolean
+Private Const InitialHideAudioIcon As Boolean = False
+
 Private sysPrompt1Text As String
 Private sysPrompt2Text As String
 Private sysPrompt3Text As String
@@ -66,8 +69,10 @@ Sub ResetSettings()
     doOverride = InitialDoOverride
     useAudioFolder = InitialUseAudioFolder
     processDiff = InitialProcessDiff
-circleXPosition = InitialCircleXPosition
-Ribbon.InvalidateControl "circleXPositionDropdown"
+    circleXPosition = InitialCircleXPosition
+    Ribbon.InvalidateControl "circleXPositionDropdown"
+    hideAudioIcon = InitialHideAudioIcon
+    Ribbon.InvalidateControl "hideAudioIconBox"
 
     SaveSettings
 
@@ -268,6 +273,7 @@ Sub SaveSettings()
     Print #fileNum, "DoOverride=" & doOverride
     Print #fileNum, "UseAudioFolder=" & useAudioFolder
     Print #fileNum, "ProcessDiff=" & processDiff
+    Print #fileNum, "HideAudioIcon=" & hideAudioIcon
     Close #fileNum
 '    MsgBox "Settings saved successfully to " & settingsFilePath, vbInformation
     Debug.Print "Settings saved successfully to " & settingsFilePath
@@ -311,6 +317,8 @@ Sub LoadSettings()
                     useAudioFolder = CBool(parts(1))
                 Case "ProcessDiff"
                     processDiff = CBool(parts(1))
+                Case "HideAudioIcon"
+                    hideAudioIcon = CBool(parts(1))
             End Select
         End If
     Loop
@@ -444,4 +452,13 @@ End Sub
 ' スライドを最後に移動
 Sub MoveSlideToLast(control As IRibbonControl)
     ActiveWindow.View.GotoSlide index:=ActivePresentation.Slides.Count
+End Sub
+
+Sub OnHideAudioIconChange(control As IRibbonControl, pressed As Boolean)
+    hideAudioIcon = pressed
+    SaveSettings  ' 設定変更時に即座に保存
+End Sub
+
+Sub GetHideAudioIcon(control As IRibbonControl, ByRef returnedVal)
+    returnedVal = hideAudioIcon
 End Sub
