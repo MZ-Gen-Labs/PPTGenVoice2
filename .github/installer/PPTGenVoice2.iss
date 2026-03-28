@@ -7,7 +7,7 @@
 AppId=PPTGenVoice2
 AppName=PPTGenVoice2
 AppVersion={#MyAppVersion}
-AppPublisher=Your Name or Organization
+AppPublisher=MZ-Gen-Labs
 
 UninstallDisplayName=PPTGenVoice2
 
