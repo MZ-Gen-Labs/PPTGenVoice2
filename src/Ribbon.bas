@@ -462,3 +462,29 @@ End Sub
 Sub GetHideAudioIcon(control As IRibbonControl, ByRef returnedVal)
     returnedVal = hideAudioIcon
 End Sub
+
+' 次のスライドへ移動し、直後にプレビューを実行する
+Sub MoveNextAndPreview(control As IRibbonControl)
+    Dim currentIndex As Integer
+    Dim totalSlides As Integer
+    
+    ' 現在のスライド番号と全スライド数を取得
+    currentIndex = ActiveWindow.View.Slide.SlideIndex
+    totalSlides = ActivePresentation.Slides.Count
+    
+    ' 最後のスライドでなければ処理を実行
+    If currentIndex < totalSlides Then
+        ' 1. 次のスライドへ移動
+        ActiveWindow.View.GotoSlide index:=currentIndex + 1
+        
+        ' 2. PPTの画面描画（スライド切り替え）が完了するのを一瞬待つ
+        DoEvents
+        
+        ' 3. プレビューコマンドを実行
+        On Error Resume Next
+        Application.CommandBars.ExecuteMso "AnimationPreview"
+        On Error GoTo 0
+    Else
+        MsgBox "最後のスライドです。これ以上進めません。", vbInformation, "情報"
+    End If
+End Sub

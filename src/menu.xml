@@ -43,10 +43,13 @@
         <group id="GroupAll" label="PPT実行">
           <button id="BtnMovePrev" label="前へ" imageMso="GoToPreviousRecord" onAction="MoveSlideUp" />
           <button id="BtnMoveFirst" label="先頭へ" imageMso="GoToFirstRecord" onAction="MoveSlideToFirst" />
-          <button id="Btn11" label="プレビュー" size="large" imageMso="GoLtrDown" onAction="TestPreview" />
+          <button id="Btn11" label="プレビュー" size="large" imageMso="SlideShowFromCurrent" onAction="TestPreview" />
+
+          <button id="BtnMoveNextAndPreview" label="次へ＆&#xD;&#xA;プレビュー" size="large" imageMso="AnimationPreview" onAction="MoveNextAndPreview" />          
+
           <button id="BtnMoveNext" label="次へ" imageMso="GoToNextRecord" onAction="MoveSlideDown" />
           <button id="BtnMoveLast" label="最後へ" imageMso="GoToLastRecord" onAction="MoveSlideToLast" />
-
+          
         </group>
       </tab>
     </tabs>
